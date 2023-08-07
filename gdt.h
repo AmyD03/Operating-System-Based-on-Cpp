@@ -19,6 +19,7 @@ class GlobalDescriptorTable
                 unit32_t Base();
                 unit32_t Limit();
         } __attribute__((packed));
+        
         SegmentDescriptor nullSegmentSelector;
         SegmentDescriptor unusedSegmentSelector;
         SegmentDescriptor codeSegmentSelector;
