@@ -1,9 +1,37 @@
 //kernel.cpp和bert.cpp一起编译成kernel.o
+//使用8086汇编时，显示器或DOS窗口一行可以显示80个字符，总共25行，也就是说一个窗口可以显示80*25个字符，而这80*25个字符可以通过指定颜色属性的方式来做到彩色、高亮、闪烁、背景色等显示效果，80*25彩色字符模式显示缓冲区因此得名。
 void printf(char* str)
 {
     (unit16_t*)VideoMemory = (unit16_t*)0xb8000;
-    for(int i = 0; str[i] != '\0'; ++i)
-        VideoMemory[i] = str[i];
+    static unit8_t x=0,y=0;
+    for(int i = 0; str[i] != '\0'; ++i){
+        swtich(str[i]){
+            case '\n':
+                x=0;y++; //设置换行操作
+                break;
+            default:
+                VideoMemory[80*y+x] = (VideoMemory[80*y+x])|str[i];
+                x++;
+                break;
+        }
+        
+        if(x >= 80){
+            y++;
+            x=0;
+        }
+        if(y >= 25){ //如果y值超过25，遍历整个屏幕将所有内容置为空白
+            for(y =0;y<25;y++){
+                for(x=0;x<80;x++){
+                    VideoMemory[80*y+x] = (VideoMemory[80*y+x])|' ';
+                    y=0;
+                    x=0;
+                }
+
+            }
+            
+        }
+    }
+        
 }
 typedef void(*constructor){};
 extern "C" constructor start_ctors;
