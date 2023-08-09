@@ -8,10 +8,21 @@
 class InterruptManager
 {
     public:
-        InterruptManager(GDT* gdt);
+        InterruptManager(GDT* gdt); 
         ~InterruptManager();
+
+        void Activate();
+        void Deactivate();
+
         static unit32_t HandleInterrupt(unit8_t InterruptNumber, unit32_t esp);
+        static unit32_t DoHandleInterrupt(unit8_t InterruptNumber, unit32_t esp);
+    
+        static void IgnoreInterruptRequest();
+        static void HandleInterruptRequest0x00();
+        static void HandleInterruptRequest0x01();
+        
     protected:
+        static InterruptManager* ActiveInterruptManager; //中断管理器
         struct GateDescriptor
         {
             unit16_t HandeAddressLowBits;
