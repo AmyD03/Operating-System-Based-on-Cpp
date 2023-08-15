@@ -5,8 +5,20 @@
 #include "port.h"
 #include "gct.h"
 
+class InterruptHandler
+{
+    protected:
+        unit8_t interruptNumber;
+        InterruptManager* interruptManager;
+        InterruptHandler(unit8_t interruptNumber,InterruptManager* interruptManager);
+        ~InterruptManager();
+    public:
+        unit32_t HandleInterrupt(unit32_t esp);
+};
+
 class InterruptManager
 {
+    friend class InterruptHandler;
     public:
         InterruptManager(GDT* gdt); 
         ~InterruptManager();
@@ -15,14 +27,15 @@ class InterruptManager
         void Deactivate();
 
         static unit32_t HandleInterrupt(unit8_t InterruptNumber, unit32_t esp);
-        static unit32_t DoHandleInterrupt(unit8_t InterruptNumber, unit32_t esp);
+        unit32_t DoHandleInterrupt(unit8_t InterruptNumber, unit32_t esp);
     
         static void IgnoreInterruptRequest();
         static void HandleInterruptRequest0x00();
         static void HandleInterruptRequest0x01();
         
     protected:
-        static InterruptManager* ActiveInterruptManager; //中断管理器
+        static InterruptManager* ActiveInterruptManager; //只有一个active的中断管理器
+        InterruptHandler* handlers[256];
         struct GateDescriptor
         {
             unit16_t HandeAddressLowBits;
