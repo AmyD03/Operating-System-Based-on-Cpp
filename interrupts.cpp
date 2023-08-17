@@ -46,7 +46,10 @@ InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
     const unit8_t IDT_INTERRUPT_GATE = 0xE;
 
     for(unit16_t i=0 ; i<256 ; i++)
+    {
+        handlers[i] = 0;
         SetInterruptDesciptorTableEntry(i,CodeSegment,&IgnoreInterruptRequest,0,IDT_INTERRUPT_GATE);
+    }
 
     SetInterruptDesciptorTableEntry(0x20,CodeSegment,&HandleInterruptRequest0x00,0,IDT_INTERRUPT_GATE);
     SetInterruptDesciptorTableEntry(0x20,CodeSegment,&HandleInterruptRequest0x01,0,IDT_INTERRUPT_GATE);
@@ -59,6 +62,18 @@ InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
 
     picMasterData.Write(0x04);
     picSlaveData.Write(0x02);
+
+    picMasterData.Write(0x00);
+    picSlaveData.Write(0x00);
+
+    InterruptDescriptorTable idt;
+    idt.size = 256 * sizeof(GateDescriptor) - 1;
+    idt.base = (unit32_t)interruptDescriptorTable;
+    asm volatile("lidt %0" : :"m"(idt));
+}
+
+InterruptManager::~InterruptManager()
+{
 }
 
 void InterruptManager::Activate(){
@@ -87,8 +102,14 @@ unit32_t InterruptManager::handleInterrupt(unit8_t interruptNumber,unit32_t esp)
 
 unit32_t InterruptManager::DoHandleInterrupt(unit8_t interruptNumber,unit32_t esp)
 {
-    if(interruptNumber != 0x20){
-        printf(" INTERRUPT");
+    if(handlers[interruptNumber] != 0){
+        esp = handlers[interruptNumber]->HandleInterrupt(esp);
+    }else if(interruptNumber != 0x20){
+        char* foo = " UNHANDLED INTERRUPT 0X00";
+        char* hex = "0123456789ABCDEF";
+        foo[22] = hex[(interruptNumber >> 4)& 0x0F];
+        foo[23] = hex[interruptNumber & 0x0F];
+        printf(foo);
     }
     
     if(0x20 <= interruptNumber && interruptNumber < 0x30){
