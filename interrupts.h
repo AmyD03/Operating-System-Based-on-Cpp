@@ -13,7 +13,7 @@ class InterruptHandler
         InterruptHandler(unit8_t interruptNumber,InterruptManager* interruptManager);
         ~InterruptManager();
     public:
-        unit32_t HandleInterrupt(unit32_t esp);
+        virtual unit32_t HandleInterrupt(unit32_t esp);
 };
 
 class InterruptManager
