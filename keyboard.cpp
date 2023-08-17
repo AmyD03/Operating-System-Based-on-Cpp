@@ -22,6 +22,19 @@ KeyboardDriver::~KeyboardDriver()
 
 void printf(char*);
 
+void KeyboardDriver::Activate()
+{
+    while(commandport.Reand() & 0x1)
+        dataport.Read();
+    commandport.Write(0xAE); //告诉键盘开始发送/使用中断 active interrupts
+    commandport.Write(0x20); //获得当前状况 get current state
+    unit8_t status = (dataport.Read() | 1) & ~0下01;
+    commandport.Write(0x60); //设置状态
+    dataport.Write(status);
+
+    dataport.Write(0xF4);
+}
+
 unit32_t KeyboardDriver::HandleInterrupt(unit32_t esp)
 {         
     unit8_t key = dataport.Read();

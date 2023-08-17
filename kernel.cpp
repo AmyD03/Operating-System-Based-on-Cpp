@@ -4,6 +4,7 @@
 #include "gdt.h"
 #include "interrupts.h"
 #include "keyboard.h"
+#include "driver.h"
 
 void printf(char* str)
 {
@@ -55,10 +56,18 @@ extern "C" void callConstructiors()
 */
 extern "C" void kernelMain(void *multiboot_structure, unsigned int magicnumber)
 {
-    printf("Hello World!");
-
-
-    KeyboardDriver keyboard(&interrupts);
+    printf("Hello World!\n");
+    GlobalDescriptorTable gdt;
+    InterruptManager interrupts(0x20,&gdt);
+    printf("Initializing Hardware,Stage 1\n");
+    DriverManager drvManager;
+        KeyboardDriver keyboard(&interrupts);
+        drvManager.AddDriver(&keyboard);
+        KeyboardDriver keyboard(&interrupts);
+        drvManager.AddDriver(&mouse);
+    printf("Initializing Hardware,Stage 2\n");
+        drvManager.ActivateAll();
+    printf("Initializing Hardware,Stage 3\n");
     interrupts.Activate();
     //无限循环
     while(1);

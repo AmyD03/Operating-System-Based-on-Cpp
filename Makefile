@@ -2,7 +2,7 @@ GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-excep
 ASPARAMS = --32  #设为32位
 LDPARAMS = -melf_i386
 
-objects = loader.o kernel.o gdt.o port.o keyboard.o#传入源文件
+objects = loader.o kernel.o gdt.o port.o keyboard.o driver.o#传入源文件
 
 #.cpp生成.o文件
 #传入参数GPPPARAMS
