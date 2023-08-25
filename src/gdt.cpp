@@ -1,4 +1,8 @@
-#include "gdt.h"
+#include <gdt.h>
+
+using namespace myos;
+using namespace myos::common;
+
 //GDT代表GlobalDescriptorTable
 GDT::GDT()
 :nullSegmentSelector(0,0,0),

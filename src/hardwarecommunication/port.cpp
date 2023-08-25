@@ -1,4 +1,7 @@
-#include"port.h"
+#include<hardwarecommunication/port.h>
+
+using namespace myos::common;
+using namespace myos::hardwarecommunication;
 
 Port::Port(unit16_t portnumber)
 {
@@ -34,7 +37,7 @@ Port8Bit_slow::Port8Bit_slow(unit16_t portnumber):Port(portnumber){}
 Port8Bit_slow::~Port8Bit_slow(){}
 void Port8Bit_slow::Write(unit8_t data)
 {
-    __asm__volatile("outb %0,%1\njmp 1f\nl:jmp 1f\n1:"::"a"(data),"Nd"(portnumber));
+    __asm__volatile("outb %0,%1\njmp lf\nl:jmp lf\n1:"::"a"(data),"Nd"(portnumber));
 }
 
 Port16Bit::Port16Bit(unit16_t portnumber)

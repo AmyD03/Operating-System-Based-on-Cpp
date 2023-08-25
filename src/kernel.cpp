@@ -1,10 +1,16 @@
 //kernel.cpp和bert.cpp一起编译成kernel.o
 //使用8086汇编时，显示器或DOS窗口一行可以显示80个字符，总共25行，也就是说一个窗口可以显示80*25个字符，而这80*25个字符可以通过指定颜色属性的方式来做到彩色、高亮、闪烁、背景色等显示效果，80*25彩色字符模式显示缓冲区因此得名。
-#include "types.h"
-#include "gdt.h"
-#include "interrupts.h"
-#include "keyboard.h"
-#include "driver.h"
+#include <common/types.h>
+#include <gdt.h>
+#include <hardwarecommunication/interrupts.h>
+#include <drivers/keyboard.h>
+#include <drivers/driver.h>
+#include <drivers/mouse.h>
+
+using namespace myos;
+using namespace myos::common;
+using namespace myos::drivers;
+using namespace myos::hardwarecommunication;
 
 void printf(char* str)
 {
