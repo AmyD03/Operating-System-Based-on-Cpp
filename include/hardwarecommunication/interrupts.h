@@ -30,7 +30,7 @@ namespace myos
                 void Activate();
                 void Deactivate();
                 
-                static unit32_t HandleInterrupt(unit8_t InterruptNumber, unit32_t esp);
+                static unit32_t handleInterrupt(unit8_t InterruptNumber, unit32_t esp);
                 unit32_t DoHandleInterrupt(unit8_t InterruptNumber, unit32_t esp);
             
                 

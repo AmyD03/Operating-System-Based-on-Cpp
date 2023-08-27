@@ -12,7 +12,8 @@ namespace myos
         class Desktop : public CompositeWidget,public myos::drivers::MouseEventHandler
         {
             protected:
-                
+                common::
+
         };
     }
 }

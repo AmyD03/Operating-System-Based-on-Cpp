@@ -18,7 +18,8 @@ InterruptHandler::~InterruptManager(){
     }
 }
 
-unit32_t InterruptHandler::HandleInterrupt(unit32_t esp){
+unit32_t InterruptHandler::handleInterrupt(unit32_t esp){
+    printf("INTERRUPT");
     return esp;
 }
 
